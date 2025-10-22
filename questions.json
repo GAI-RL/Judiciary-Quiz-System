@@ -1,0 +1,265 @@
+[
+  {
+    "question": "What is the capital of France?",
+    "options": ["Paris", "London", "Berlin", "Madrid"],
+    "answer": "Paris"
+  },
+  {
+    "question": "Which language runs in a web browser?",
+    "options": ["Python", "C", "Java", "JavaScript"],
+    "answer": "JavaScript"
+  },
+  {
+    "question": "What does CSS stand for?",
+    "options": ["Cascading Style Sheets", "Computer Style Syntax", "Creative Styling System", "Colorful Style Sheet"],
+    "answer": "Cascading Style Sheets"
+  },
+  {
+    "question": "What does HTML stand for?",
+    "options": ["Hyper Text Markup Language", "High Transfer Machine Language", "Hyper Transfer Markup Language", "Home Tool Markup Language"],
+    "answer": "Hyper Text Markup Language"
+  },
+  {
+    "question": "Which tag is used to define a hyperlink in HTML?",
+    "options": ["<a>", "<link>", "<href>", "<url>"],
+    "answer": "<a>"
+  },
+  {
+    "question": "What year was JavaScript created?",
+    "options": ["1993", "1995", "1997", "1999"],
+    "answer": "1995"
+  },
+  {
+    "question": "Who invented the World Wide Web?",
+    "options": ["Tim Berners-Lee", "Elon Musk", "Bill Gates", "Mark Zuckerberg"],
+    "answer": "Tim Berners-Lee"
+  },
+  {
+    "question": "What is the largest planet in our Solar System?",
+    "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+    "answer": "Jupiter"
+  },
+  {
+    "question": "Which data structure uses FIFO?",
+    "options": ["Stack", "Queue", "Tree", "Graph"],
+    "answer": "Queue"
+  },
+  {
+    "question": "Which programming language is primarily used for AI?",
+    "options": ["Python", "HTML", "C", "PHP"],
+    "answer": "Python"
+  },
+  {
+    "question": "Which company developed the iPhone?",
+    "options": ["Apple", "Samsung", "Google", "Nokia"],
+    "answer": "Apple"
+  },
+  {
+    "question": "Which organ in the human body pumps blood?",
+    "options": ["Brain", "Liver", "Heart", "Lungs"],
+    "answer": "Heart"
+  },
+  {
+    "question": "Which gas do plants absorb from the atmosphere?",
+    "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Helium"],
+    "answer": "Carbon Dioxide"
+  },
+  {
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "options": ["China", "Japan", "Korea", "Thailand"],
+    "answer": "Japan"
+  },
+  {
+    "question": "What does CPU stand for?",
+    "options": ["Central Processing Unit", "Central Print Unit", "Computer Personal Unit", "Control Processing Unit"],
+    "answer": "Central Processing Unit"
+  },
+ {
+  "question": "Which HTML tag is used for the largest heading?",
+  "options": ["&lt;h6&gt;", "&lt;h3&gt;", "&lt;h1&gt;", "&lt;head&gt;"],
+  "answer": "&lt;h1&gt;"
+},
+
+  {
+    "question": "Which CSS property changes the text color?",
+    "options": ["font-color", "color", "text-color", "background"],
+    "answer": "color"
+  },
+  {
+    "question": "Which of the following is a JavaScript framework?",
+    "options": ["React", "Laravel", "Django", "Flask"],
+    "answer": "React"
+  },
+  {
+    "question": "In which continent is Egypt located?",
+    "options": ["Asia", "Europe", "Africa", "Australia"],
+    "answer": "Africa"
+  },
+  {
+    "question": "Which instrument measures temperature?",
+    "options": ["Thermometer", "Barometer", "Hygrometer", "Altimeter"],
+    "answer": "Thermometer"
+  },
+  {
+    "question": "What is the boiling point of water?",
+    "options": ["90°C", "50°C", "100°C", "150°C"],
+    "answer": "100°C"
+  },
+  {
+    "question": "Who wrote the play 'Romeo and Juliet'?",
+    "options": ["Charles Dickens", "William Shakespeare", "Leo Tolstoy", "Jane Austen"],
+    "answer": "William Shakespeare"
+  },
+  {
+    "question": "Which number system does a computer use?",
+    "options": ["Decimal", "Binary", "Octal", "Hexadecimal"],
+    "answer": "Binary"
+  },
+  {
+    "question": "Which is the smallest ocean in the world?",
+    "options": ["Indian", "Pacific", "Atlantic", "Arctic"],
+    "answer": "Arctic"
+  },
+    {
+    "question": "Which symbol is used for comments in JavaScript?",
+    "options": ["//", "/*", "&lt;!-- --&gt;", "#"],
+    "answer": "//"
+  },
+  {
+    "question": "Which HTML element is used to insert an image?",
+    "options": ["&lt;image&gt;", "&lt;img&gt;", "&lt;src&gt;", "&lt;pic&gt;"],
+    "answer": "&lt;img&gt;"
+  },
+  {
+    "question": "What is 5 + 3 * 2?",
+    "options": ["16", "11", "10", "13"],
+    "answer": "11"
+  },
+{
+  "question": "Which HTML tag is used to insert a line break?",
+  "options": ["&lt;br&gt;", "&lt;lb&gt;", "&lt;break&gt;", "&lt;newline&gt;"],
+  "answer": "&lt;br&gt;"
+},
+
+  {
+    "question": "What is the currency of Japan?",
+    "options": ["Yuan", "Yen", "Won", "Ringgit"],
+    "answer": "Yen"
+  },
+  {
+    "question": "Which gas do humans exhale?",
+    "options": ["Oxygen", "Carbon Dioxide", "Hydrogen", "Nitrogen"],
+    "answer": "Carbon Dioxide"
+  },
+  {
+    "question": "Which key is used to print a new line in Python?",
+    "options": ["\\r", "\\n", "\\t", "\\p"],
+    "answer": "\\n"
+  },
+  {
+    "question": "Which country has the largest population?",
+    "options": ["India", "China", "USA", "Russia"],
+    "answer": "India"
+  },
+  {
+    "question": "What is the hardest natural substance on Earth?",
+    "options": ["Gold", "Iron", "Diamond", "Platinum"],
+    "answer": "Diamond"
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "options": ["Venus", "Mars", "Jupiter", "Mercury"],
+    "answer": "Mars"
+  },
+  {
+    "question": "Which element has the chemical symbol 'O'?",
+    "options": ["Gold", "Oxygen", "Osmium", "Oxide"],
+    "answer": "Oxygen"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "options": ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Michelangelo"],
+    "answer": "Leonardo da Vinci"
+  },
+  {
+    "question": "What does HTTP stand for?",
+    "options": ["HyperText Transfer Protocol", "HighText Transmission Program", "Hyper Transfer Text Program", "Hyperlink Transfer Tool Protocol"],
+    "answer": "HyperText Transfer Protocol"
+  },
+  {
+    "question": "Which planet is closest to the Sun?",
+    "options": ["Venus", "Mercury", "Earth", "Mars"],
+    "answer": "Mercury"
+  },
+  {
+    "question": "Which blood type is known as the universal donor?",
+    "options": ["O-", "A+", "B-", "AB+"],
+    "answer": "O-"
+  },
+  {
+    "question": "Which ocean is the largest?",
+    "options": ["Atlantic", "Indian", "Pacific", "Arctic"],
+    "answer": "Pacific"
+  },
+  {
+    "question": "Which animal is known as the King of the Jungle?",
+    "options": ["Elephant", "Lion", "Tiger", "Bear"],
+    "answer": "Lion"
+  },
+  {
+    "question": "Which device is used to input text into a computer?",
+    "options": ["Monitor", "Mouse", "Keyboard", "Printer"],
+    "answer": "Keyboard"
+  },
+  {
+    "question": "What is the square root of 81?",
+    "options": ["9", "8", "7", "6"],
+    "answer": "9"
+  },
+  {
+    "question": "Which programming language is used to style web pages?",
+    "options": ["HTML", "CSS", "Python", "C++"],
+    "answer": "CSS"
+  },
+  
+  {
+    "question": "Who is known as the father of computers?",
+    "options": ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"],
+    "answer": "Charles Babbage"
+  },
+  {
+    "question": "What is the chemical symbol for water?",
+    "options": ["H2O", "O2", "CO2", "H2"],
+    "answer": "H2O"
+  },
+  {
+    "question": "Which continent is the Sahara Desert located in?",
+    "options": ["Asia", "Africa", "Australia", "South America"],
+    "answer": "Africa"
+  },
+  {
+    "question": "What is the process of plants making their food called?",
+    "options": ["Transpiration", "Respiration", "Photosynthesis", "Digestion"],
+    "answer": "Photosynthesis"
+  },
+  {
+    "question": "Which country hosted the 2020 Olympic Games?",
+    "options": ["China", "Japan", "Brazil", "USA"],
+    "answer": "Japan"
+  },
+  {
+    "question": "What is the main gas found in the air we breathe?",
+    "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+    "answer": "Nitrogen"
+  },
+  {
+    "question": "Which planet is known for its rings?",
+    "options": ["Earth", "Saturn", "Uranus", "Neptune"],
+    "answer": "Saturn"
+  },
+  {
+    "question": "Which language is used to make Android apps?",
+    "options": ["Kotlin", "Swift", "PHP", "Ruby"],
+    "answer": "Kotlin"
+  }
+]
