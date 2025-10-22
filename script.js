@@ -1,87 +1,58 @@
-let questions = [];
-let currentIndex = 0;
-let score = 0;
-let timer = 300;
-let timerInterval;
-let selectedOption = null;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Quiz</title>
 
-// Fetch questions
-fetch("questions.json")
-  .then(res => res.json())
-  .then(data => {
-    questions = data.sort(() => 0.5 - Math.random()).slice(0, 30);
-    document.getElementById("total").textContent = questions.length;
-  });
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-const startPage = document.getElementById("start-page");
-const quizPage = document.getElementById("quiz-page");
-const resultPage = document.getElementById("result-page");
-const questionContainer = document.getElementById("question-container");
-const progressBar = document.getElementById("progress-bar");
-const timeEl = document.getElementById("time");
-const nextBtn = document.getElementById("next-btn");
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-card container py-5">
 
-document.getElementById("start-btn").addEventListener("click", () => {
-  startPage.classList.remove("active");
-  quizPage.classList.add("active");
-  startTimer();
-  renderQuestion();
-});
+    <!-- Start Page -->
+    <section id="start-page" class="active text-center">
+      <h1 class="fw-bold mb-3">🎯 Smart Quiz</h1>
+      <p class="mb-4 fs-5">Test your knowledge — 30 random questions await!</p>
+      <button id="start-btn" class="btn btn-primary btn-lg">Start Quiz</button>
+    </section>
 
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timer--;
-    timeEl.textContent = timer;
-    if (timer <= 0) finishQuiz();
-  }, 1000);
-}
+    <!-- Quiz Page -->
+    <section id="quiz-page" > <!-- hide by default -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div id="timer">⏱ Time Left: <span id="time">300</span>s</div>
+        <div>Question <span id="current">1</span> / <span id="total">30</span></div>
+      </div>
 
-function renderQuestion() {
-  const q = questions[currentIndex];
-  document.getElementById("current").textContent = currentIndex + 1;
-  progressBar.style.width = `${((currentIndex) / questions.length) * 100}%`;
+      <div class="progress mb-3">
+        <div id="progress-bar" class="progress-bar bg-primary" style="width: 0%"></div>
+      </div>
 
-  questionContainer.innerHTML = `
-    <h4 class="mb-4">${q.question}</h4>
-    <div id="options" class="d-grid gap-3"></div>
-  `;
+      <!-- ✅ Question container dynamically filled by JS -->
+      <div id="question-container" class="mb-4"></div>
 
-  const optionsDiv = document.getElementById("options");
-  q.options.forEach(option => {
-    const btn = document.createElement("button");
-    btn.className = "btn btn-outline-primary text-start w-100 p-3 option-btn";
-    btn.innerHTML = option;
-    btn.addEventListener("click", () => selectOption(btn, option));
-    optionsDiv.appendChild(btn);
-  });
-}
+      <div class="text-center">
+        <button id="next-btn" class="btn btn-primary mt-3">Next</button>
+      </div>
+    </section>
 
-function selectOption(btn, option) {
-  document.querySelectorAll(".option-btn").forEach(b => {
-    b.classList.remove("option-selected");
-  });
+    <!-- Result Page -->
+    <section id="result-page" class="text-center" style="display:none;">
+      <h2 class="fw-bold mb-3">🏁 Quiz Completed!</h2>
+      <p class="fs-4 mb-4">Your Score: <span id="score" class="fw-bold"></span> / 30</p>
+      <button class="btn btn-success" onclick="window.location.reload()">Try Again</button>
+    </section>
 
-  btn.classList.add("option-selected");
-  selectedOption = option;
-}
+  </div>
 
-nextBtn.addEventListener("click", () => {
-  if (!selectedOption) return alert("Please select an option!");
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom Script -->
+  <script src="script.js"></script>
+</body>
+</html>
 
-  if (selectedOption === questions[currentIndex].answer) score++;
-
-  currentIndex++;
-  if (currentIndex < questions.length) {
-    selectedOption = null;
-    renderQuestion();
-  } else {
-    finishQuiz();
-  }
-});
-
-function finishQuiz() {
-  clearInterval(timerInterval);
-  quizPage.classList.remove("active");
-  resultPage.classList.add("active");
-  document.getElementById("score").textContent = score;
-}
