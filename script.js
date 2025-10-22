@@ -1,58 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Smart Quiz</title>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+let questions = [];
+let currentIndex = 0;
+let score = 0;
+let timer = 300;
+let timerInterval;
+let selectedOption = null;
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="quiz-card container py-5">
+// fetch("questions.json")
+//   .then(res => res.json())
+//   .then(data => {
+//     questions = data.sort(() => 0.5 - Math.random()).slice(0, 10);
+//     document.getElementById("total").textContent = questions.length;
+//   })
+//   .catch(err => console.error("Error loading questions:", err));
 
-    <!-- Start Page -->
-    <section id="start-page" class="active text-center">
-      <h1 class="fw-bold mb-3">🎯 Smart Quiz</h1>
-      <p class="mb-4 fs-5">Test your knowledge — 30 random questions await!</p>
-      <button id="start-btn" class="btn btn-primary btn-lg">Start Quiz</button>
-    </section>
+fetch("./questions.json")
+  .then(res => {
+    if (!res.ok) throw new Error("Failed to load questions.json");
+    return res.json();
+  })
+  .then(data => {
+    console.log("Loaded questions:", data);
+    questions = Array.isArray(data) ? data.sort(() => 0.5 - Math.random()).slice(0, 18) : [];
+    document.getElementById("total").textContent = questions.length;
+  })
+  .catch(err => console.error("Error loading questions:", err));
 
-    <!-- Quiz Page -->
-    <section id="quiz-page" > <!-- hide by default -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div id="timer">⏱ Time Left: <span id="time">300</span>s</div>
-        <div>Question <span id="current">1</span> / <span id="total">30</span></div>
-      </div>
 
-      <div class="progress mb-3">
-        <div id="progress-bar" class="progress-bar bg-primary" style="width: 0%"></div>
-      </div>
+const startPage = document.getElementById("start-page");
+const quizPage = document.getElementById("quiz-page");
+const resultPage = document.getElementById("result-page");
+const questionContainer = document.getElementById("question-container");
+const progressBar = document.getElementById("progress-bar");
+const timeEl = document.getElementById("time");
+const nextBtn = document.getElementById("next-btn");
 
-      <!-- ✅ Question container dynamically filled by JS -->
-      <div id="question-container" class="mb-4"></div>
+document.getElementById("start-btn").addEventListener("click", () => {
+  startPage.classList.remove("active");
+  quizPage.classList.add("active");
+  startTimer();
+  renderQuestion();
+});
 
-      <div class="text-center">
-        <button id="next-btn" class="btn btn-primary mt-3">Next</button>
-      </div>
-    </section>
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timer--;
+    timeEl.textContent = timer;
+    if (timer <= 0) finishQuiz();
+  }, 1000);
+}
+function renderQuestion() {
+  const q = questions[currentIndex];
+  document.getElementById("current").textContent = currentIndex + 1;
+  progressBar.style.width = `${((currentIndex) / questions.length) * 100}%`;
 
-    <!-- Result Page -->
-    <section id="result-page" class="text-center" style="display:none;">
-      <h2 class="fw-bold mb-3">🏁 Quiz Completed!</h2>
-      <p class="fs-4 mb-4">Your Score: <span id="score" class="fw-bold"></span> / 30</p>
-      <button class="btn btn-success" onclick="window.location.reload()">Try Again</button>
-    </section>
+  // Reset selected option
+  selectedOption = null;
 
-  </div>
+  // Render question text
+  questionContainer.innerHTML = `
+    <h4 class="mb-4">${q.question}</h4>
+    <div id="options" class="d-grid gap-3"></div>
+  `;
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Custom Script -->
-  <script src="script.js"></script>
-</body>
-</html>
+  const optionsDiv = document.getElementById("options");
+
+  // ✅ Safely check if options exist and are an array
+  if (Array.isArray(q.options) && q.options.length > 0) {
+    // Multiple choice question
+    q.options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "btn btn-outline-primary text-start w-100 p-3 option-btn";
+      btn.innerHTML = option;
+      btn.addEventListener("click", () => selectOption(btn, option));
+      optionsDiv.appendChild(btn);
+    });
+  } else {
+    // Open-ended question (no options field or empty array)
+    const textarea = document.createElement("textarea");
+    textarea.className = "form-control";
+    textarea.id = "text-answer";
+    textarea.rows = 4;
+    textarea.placeholder = "Write your answer here...";
+    textarea.addEventListener("input", e => {
+      selectedOption = e.target.value.trim();
+    });
+    optionsDiv.appendChild(textarea);
+  }
+}
+
+function selectOption(btn, option) {
+  document.querySelectorAll(".option-btn").forEach(b => {
+    b.classList.remove("option-selected");
+  });
+  btn.classList.add("option-selected");
+  selectedOption = option;
+}
+
+nextBtn.addEventListener("click", () => {
+  const q = questions[currentIndex];
+
+  // Require an answer before moving on
+  if (!selectedOption || selectedOption === "") {
+    return alert("Please provide your answer!");
+  }
+
+  // Only score if question has a predefined answer
+  if (q.options && q.answer && selectedOption === q.answer) {
+    score++;
+  }
+
+  currentIndex++;
+  if (currentIndex < questions.length) {
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+});
+
+function finishQuiz() {
+  clearInterval(timerInterval);
+  quizPage.classList.remove("active");
+  resultPage.classList.add("active");
+  document.getElementById("score").textContent = score;
+}
+
 
