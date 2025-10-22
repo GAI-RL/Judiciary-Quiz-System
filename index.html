@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="quiz-card">
-    
+  <div class="quiz-card container py-5">
+
     <!-- Start Page -->
     <section id="start-page" class="active text-center">
       <h1 class="fw-bold mb-3">🎯 Smart Quiz</h1>
@@ -22,7 +22,7 @@
     </section>
 
     <!-- Quiz Page -->
-    <section id="quiz-page">
+    <section id="quiz-page" > <!-- hide by default -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div id="timer">⏱ Time Left: <span id="time">300</span>s</div>
         <div>Question <span id="current">1</span> / <span id="total">30</span></div>
@@ -32,6 +32,7 @@
         <div id="progress-bar" class="progress-bar bg-primary" style="width: 0%"></div>
       </div>
 
+      <!-- ✅ Question container dynamically filled by JS -->
       <div id="question-container" class="mb-4"></div>
 
       <div class="text-center">
@@ -40,7 +41,7 @@
     </section>
 
     <!-- Result Page -->
-    <section id="result-page" class="text-center">
+    <section id="result-page" class="text-center" style="display:none;">
       <h2 class="fw-bold mb-3">🏁 Quiz Completed!</h2>
       <p class="fs-4 mb-4">Your Score: <span id="score" class="fw-bold"></span> / 30</p>
       <button class="btn btn-success" onclick="window.location.reload()">Try Again</button>
@@ -54,3 +55,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
