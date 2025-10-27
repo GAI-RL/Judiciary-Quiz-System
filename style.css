@@ -1,72 +1,258 @@
-body {
-  background: linear-gradient(135deg, #f5f7fa, #e3f2fd);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  color: #333;
+
+/* === Header === */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+  border-bottom: 2px solid #f1f1f1;
 }
 
-.quiz-card {
+.logo {
+
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.left-logo {
+  margin-left: 15px;  /* margin from left edge */
+      width: 150px;
+    height: 100px;
+}
+
+.right-logo {
+  margin-right: 15px; /* margin from right edge */
+      width: 50px;
+    height: 50px;
+}
+
+
+/* Center title spacing */
+header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+/* === Global Styles === */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f3f6fa;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* === Card Section === */
+/* .quiz-card {
+  max-width: 900px;
+  margin: 60px auto;
+} */
+
+/* === Form Container === */
+.form-section {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: #fff;
+  transition: 0.3s;
+}
+
+.form-section:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+}
+
+/* === Headings === */
+h1, h2, h5 {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* === Form Labels === */
+label.form-label {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #212529;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* === Inputs === */
+input.form-control,
+textarea.form-control,
+select.form-select {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+input.form-control:focus,
+textarea.form-control:focus,
+select.form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 4px rgba(0,123,255,0.15);
+}
+
+/* === Buttons === */
+.btn-primary {
+  background-color: #0056b3;
+  border: none;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,123,255,0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #004494;
+  box-shadow: 0 6px 15px rgba(0,123,255,0.3);
+}
+
+/* === Result Page === */
+#result-page {
+  padding: 40px;
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 800px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.option-btn {
-  transition: all 0.2s ease-in-out;
-  border-radius: 12px;
-  font-weight: 500;
-}
-
-.option-btn:hover {
-  transform: scale(1.02);
-  background-color: #eaf3ff;
-}
-
-/* Lighter highlight for selected option */
-.option-selected {
-  background-color: #d9e9ff !important;
-  border-color: #90c2ff !important;
-  /* color: #004085 !important; */
-  font-weight: 600;
-}
-
+/* === Progress Bar === */
 .progress {
-  height: 10px;
-  border-radius: 5px;
-  overflow: hidden;
+  height: 12px;
+  border-radius: 20px;
 }
 
-#timer {
+.progress-bar {
+  border-radius: 20px;
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+  header h2 {
+    font-size: 1.2rem;
+  }
+
+  .logo {
+    height: 45px;
+  }
+
+  .form-section {
+    padding: 25px;
+  }
+}
+.option-btn.option-selected {
+  background: #007bff;     /* Blue background */
+  color: white;             /* White text */
+  border-color: #007bff;    /* Blue border */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+
+/* 🔔 Professional Alert Styles */
+.custom-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  font-weight: 500;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  animation: slideIn 0.4s ease forwards;
+  color: #fff;
+  min-width: 280px;
+  max-width: 400px;
+}
+
+/* Colors */
+.custom-alert.success { background-color: #198754; }
+.custom-alert.error { background-color: #dc3545; }
+.custom-alert.warning { background-color: #ffc107; color: #333; }
+/* .custom-alert.info { background-color: #0dcaf0; } */
+.custom-alert.info {
+  background-color: #3A7CA5;  /* Professional muted steel blue */
+  color: #fff;
+  border-left: 5px solid #1f4e68;
+}
+
+
+.custom-alert {
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: opacity 0.6s ease;
+}
+
+/* Optional: fade-out class (if you prefer class-based) */
+.fade-out {
+  opacity: 0;
+}
+/* Animation */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateX(20px); }
+}
+#back-btn {
+  background-color: #5a6268;       /* Bootstrap secondary tone */
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
   font-weight: 600;
-  color: #007bff;
+  border-radius: 10px;
+  transition: all 0.2s ease;
 }
 
-#start-page, #quiz-page, #result-page {
-  display: none;
+#back-btn i {
+  vertical-align: middle;
+  font-size: 1.1rem;
 }
 
-#start-page.active,
-#quiz-page.active,
-#result-page.active {
-  display: block;
-}
-
-/* Center the Next button */
+/* === Common Styles for Both Buttons === */
+#back-btn,
 #next-btn {
-  display: block;
-  margin: 0 auto;
-  width: auto;
-  padding: 10px 40px;
+  padding: 10px 26px;
   font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-.option-btn.btn-outline-primary:hover {
-  color: #0d6efd !important; /* force black text */
-  background-color: #eaf3ff !important;
+/* === Back Button === */
+#back-btn {
+  background-color: #5a6268;
+  color: #fff;
+}
+
+/* #back-btn:hover {
+  background-color: #5a6268;
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* === Icons === */
+#next-btn i,
+#back-btn i {
+  font-size: 1.3rem;
+  vertical-align: middle;
+}
+.bi-arrow-right-circle::before {
+  content: "\f134";
 }

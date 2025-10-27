@@ -14,18 +14,38 @@ const totalMinutes = Math.floor((QUIZ_SETTINGS?.TOTAL_TIME || 300) / 60);
 document.getElementById("total_time").textContent = `${totalMinutes} minutes`;
 
 
+ quizPage.classList.remove("active");
+quizPage.style.display = "none";
+
+ resultPage.classList.remove("active");
+resultPage.style.display = "none";
+
+
 // Fetch questions
 async function fetchQuestions() {
-  const { data, error } = await supabase.from("questions").select("*").limit(4);
+ // const { data, error } = await supabase.from("questions").select("*");
+ const { data, error } = await supabase
+  .from("questions")
+  .select("*")
+  .order("id", { ascending: false }).limit(2);
+
+  // const { data, error } = await supabase
+  //   .from("questions")
+  //   .select("*");
 
   if (error) {
-    console.error("Error fetching questions:", error.message);
+    console.error("Error fetching questions:", error);
     return [];
   }
 
-  console.log(" Questions fetched:", data);
+  //  Shuffle the questions randomly (Fisher–Yates)
+  data.sort(() => Math.random() - 0.5);
 
-  return data;
+  //  Optional: limit how many you want
+  return data.slice(0, data.length); // show only 5 random questions
+
+
+ 
 }
 
 
@@ -48,9 +68,11 @@ document.getElementById("start-btn").addEventListener("click", async (e) => {
     }
   });
 
-  if (!allFilled) {
-    alert("Please fill in all required fields before starting the quiz.");
-    return;
+   if (!allFilled) {
+   
+    showAlert("error", "Please fill in all required fields before starting the quiz!")
+   
+   return;
   }
 
  
@@ -60,7 +82,8 @@ document.getElementById("start-btn").addEventListener("click", async (e) => {
 
 
     if (!questions || questions.length === 0) {
-      alert("No questions found in the database!");
+     // alert("No questions found in the database!");
+       showAlert("warning", "No questions found in the database!");
       return;
     }
 
@@ -68,15 +91,18 @@ document.getElementById("start-btn").addEventListener("click", async (e) => {
    document.getElementById("quiz-total").textContent =questions.length ;
    console.log("total questions in render function: " + document.getElementById("quiz-total").textContent);
   } catch (err) {
-    console.error(" Error fetching questions:", err);
-    alert("Failed to load questions. Please try again later.");
+    console.error(" error fetching questions:", err);
+   
+     showAlert("error", "Failed to load questions. Please try again later");
     return;
   }
 
-
   startPage.classList.remove("active");
-  startPage.style.display = "none";
-  quizPage.style.display = "block";
+startPage.style.display = "none";
+
+quizPage.classList.add("active");
+quizPage.style.display = "block";
+
 
   currentIndex = 0;
   score = 0;
@@ -96,8 +122,18 @@ function startTimer() {
 
     // Format with leading zero (e.g., 04:09)
     timeEl.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    
+// Update unit dynamically
+const timeUnit = document.getElementById("time-unit");
+if (timer < 60) {
+  timeUnit.textContent = "seconds";
+} else {
+  timeUnit.textContent = "minutes";
+}
 
-    if (timer <= 0) finishQuiz();
+    if (timer <= 0)
+      {clearInterval(timerInterval); 
+         finishQuiz();}
   }, 1000);
 }
 
@@ -106,6 +142,26 @@ function renderQuestion() {
   
   const q = questions[currentIndex];
   document.getElementById("current").textContent = currentIndex + 1;
+//   if (currentIndex === questions.length - 1) {
+//   nextBtn.textContent = "Submit";
+//   nextBtn.classList.remove("btn-primary");
+//   nextBtn.classList.add("btn-success");
+// } else {
+//   nextBtn.textContent = "Next";
+//   nextBtn.classList.remove("btn-success");
+//   nextBtn.classList.add("btn-primary");
+// }
+if (currentIndex === questions.length - 1) {
+  // Last question → Submit button with check icon
+  nextBtn.innerHTML = `Submit <i class="bi bi-check-circle ms-1"></i>`;
+  nextBtn.classList.remove("btn-primary");
+  nextBtn.classList.add("btn-success");
+} else {
+  // Otherwise → Next button with forward arrow
+  nextBtn.innerHTML = `Next <i class="bi bi-arrow-right-circle ms-1"></i>`;
+  nextBtn.classList.remove("btn-success");
+  nextBtn.classList.add("btn-primary");
+}
 
   // Reset selected option
   selectedOption = null;
@@ -123,6 +179,48 @@ function renderQuestion() {
   `;
 
   const optionsDiv = document.getElementById("options");
+ if (
+  q.question.toLowerCase().includes("upload your case file") ||
+  q.type === "file"
+) {
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.id = "case-file-upload";
+  fileInput.className = "form-control mb-3";
+  fileInput.accept = ".pdf,.doc,.docx,.txt,.png,.jpg";
+
+  const gistArea = document.createElement("textarea");
+  gistArea.id = "case-gist";
+  gistArea.className = "form-control";
+  gistArea.rows = 4;
+  gistArea.placeholder = "Write a brief gist of your case here...";
+
+  
+  function updateFileAnswer() {
+    const file = fileInput.files[0];
+    const gist = gistArea.value.trim();
+
+    // Only set if at least one is provided
+    if (file || gist) {
+      selectedOption = { file, gist };
+      userAnswers[currentIndex] = {
+        question_no: currentIndex + 1,
+        question: q.question,
+        selectedOption,
+        correctAnswer: null,
+        type: q.type || "file",
+      };
+    }
+  }
+
+  fileInput.addEventListener("change", updateFileAnswer);
+  gistArea.addEventListener("input", updateFileAnswer);
+
+  optionsDiv.appendChild(fileInput);
+  optionsDiv.appendChild(gistArea);
+  return;
+}
+
 
   if (Array.isArray(q.options) && q.options.length > 0) {
     // Multiple choice
@@ -173,13 +271,44 @@ function selectOption(btn, option) {
     correctAnswer: q.answer || null, // optional (if quiz has correct answers)
   };
 }
+const backBtn = document.getElementById("back-btn");
+
+backBtn.addEventListener("click", () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+
+    // restore previously selected answer if exists
+    const previousAnswer = userAnswers[currentIndex];
+    if (previousAnswer) {
+      selectedOption = previousAnswer.selectedOption;
+
+      // highlight previously chosen option
+      const optionButtons = document.querySelectorAll(".option-btn");
+      optionButtons.forEach(btn => {
+        if (btn.textContent.trim() === selectedOption) {
+          btn.classList.add("option-selected");
+        }
+      });
+
+      // restore text answers if applicable
+      const textarea = document.getElementById("text-answer");
+      if (textarea && typeof selectedOption === "string") {
+        textarea.value = selectedOption;
+      }
+    }
+  }
+});
 
 // === Next Button ===
 nextBtn.addEventListener("click", () => {
   const q = questions[currentIndex];
 
+
+    const questionContainer = document.getElementById("question-container");
+
   if (!selectedOption || selectedOption === "") {
-    alert("Please provide your answer!");
+    showFieldError(questionContainer, "Please select an answer before continuing.");
     return;
   }
 
@@ -197,90 +326,191 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
-// // === Finish Quiz ===
-// function finishQuiz() {
-//   clearInterval(timerInterval);
-//   quizPage.classList.remove("active");
-//   resultPage.classList.add("active");
-//   document.getElementById("score").textContent = score;
 
-// }
 
-async function finishQuiz() {
-  clearInterval(timerInterval);
 
-  const userInfo = {
-    email: document.getElementById("email").value,
-    name: document.getElementById("name").value,
-    mobile: document.getElementById("mobile").value,
-    designation: document.getElementById("designation").value,
-    jurisdiction: document.getElementById("jurisdiction").value,
-    experience: document.getElementById("experience").value,
-    aiUse: document.getElementById("ai-use").value,
-    civilCases: document.getElementById("civil-cases").value,
-    articles: document.getElementById("articles").value,
-    laws: getSelectedLaws(), // function to read checked boxes
-    timeTasks: document.getElementById("time-tasks").value,
-    expertise: document.getElementById("expertise").value,
-    features: document.getElementById("features").value,
-    score: score
-  };
-console.log("userAnswers before mapping:", userAnswers);
-
-  // Example: your answers array
-  const responses = userAnswers.map((r, i) => ({
-    question_no: i + 1,
-    question: r.question,
-    selected: r.selectedOption,
-    correct: r.correctAnswer,
-  }));
-
-  // Save in Supabase
-  await saveQuizData(userInfo, responses);
-
-quizPage.classList.remove("active");
-quizPage.style.display = "none";
-
-resultPage.classList.add("active");
-resultPage.style.display = "block";
-
- document.getElementById("score").textContent = score;
-
-}
 
 function getSelectedLaws() {
   return Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
     .map(el => el.value);
 }
 
+async function saveFile() {
+  const caseAnswer = userAnswers.find((ans) => ans.type === "file");
 
-// // Start quiz
-// startBtn.addEventListener("click", async () => {
-//   console.log("🎯 Start button clicked!");
+  if (!caseAnswer || !caseAnswer.selectedOption?.file) {
+ 
+    showAlert("error", "No file upload question found or no file selected!");
 
-//   questions = await fetchQuestions();
+    return null;
+  }
 
-//   if (questions.length === 0) {
-//     alert("No questions found!");
-//     return;
-//   }
+  const file = caseAnswer.selectedOption.file;
+  const fileName = `${Date.now()}_${file.name}`;
 
-//   startPage.classList.remove("active");
-//   startPage.style.display = "none";
-//   quizPage.style.display = "block";
+  const { data, error } = await supabase.storage
+    .from("case_files")
+    .upload(fileName, file);
 
-//   showQuestion();
+  if (error) {
+    console.error(" File upload failed:", error);
+    showAlert("error", "File upload failed:" + error);
+
+    return null;
+  }
+
+  const { data: urlData } = supabase.storage
+    .from("case_files")
+    .getPublicUrl(fileName);
+
+  const fileUrl = urlData.publicUrl;
+  caseAnswer.selectedOption.fileUrl = fileUrl;
+  console.log(" File uploaded successfully:", fileUrl);
+  showAlert("info", "File uploaded successfully");
+
+  return fileUrl;
+}
+function showFieldError(container, message) {
+  if (!container) return; // safety check
+  let errorDiv = container.querySelector(".error-message");
+
+  // If .error-message doesn't exist (e.g., dynamically generated question)
+  if (!errorDiv) {
+    errorDiv = document.createElement("div");
+    errorDiv.className = "error-message text-danger small mt-1";
+    container.appendChild(errorDiv);
+  }
+
+  errorDiv.textContent = message || "";
+}
+
+function showAlert(type, message) {
+  const container = document.getElementById("alert-container");
+  if (!container) {
+    console.warn("⚠️ Alert container not found in DOM");
+    return;
+  }
+
+  const icons = {
+    success: '<i class="bi bi-check-circle-fill"></i>',
+    error: '<i class="bi bi-x-circle-fill"></i>',
+    warning: '<i class="bi bi-exclamation-triangle-fill"></i>',
+    info: '<i class="bi bi-info-circle-fill"></i>'
+  };
+
+  // Clear previous alerts (optional — can remove if you want stacking)
+  container.innerHTML = "";
+
+  const alert = document.createElement("div");
+  alert.className = `custom-alert ${type}`;
+  alert.innerHTML = `${icons[type] || ""} <span>${message}</span>`;
+
+  // Add smooth fade-in
+  alert.style.opacity = "0";
+  alert.style.transition = "opacity 0.4s ease";
+
+  container.appendChild(alert);
+
+  // Trigger fade-in after slight delay
+  requestAnimationFrame(() => {
+    alert.style.opacity = "1";
+  });
+
+  // Timing constants
+  const DISPLAY_DURATION = 5000; // time before fade starts
+  const FADE_DURATION = 500; // fade-out time
+
+  setTimeout(() => {
+    alert.style.opacity = "0"; // start fade-out
+    setTimeout(() => alert.remove(), FADE_DURATION);
+  }, DISPLAY_DURATION);
+}
+
+
+
+
+async function finishQuiz() {
+  const nextBtn = document.getElementById("next-btn");
+
+  // Disable button to prevent double clicks
+  if (nextBtn) {
+    nextBtn.disabled = true;
+    questionContainer.disabled =true;
+    nextBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Submitting...`;
+  }
+   if (quizPage) {
+    quizPage.style.pointerEvents = "none";
+    quizPage.style.opacity = "0.6";
+  }
+
+  try {
+  let fileUrl = null;
+
+// Check if user has a file-type question AND uploaded a file
+const fileAnswer = userAnswers.find(ans => ans.type === "file" && ans.selectedOption?.file);
+
+if (fileAnswer) {
+  showAlert("info", "Uploading your file...");
+  fileUrl = await saveFile();
+  
+  if (fileUrl) {
+    console.log(" File uploaded:", fileUrl);
+    showAlert("success", "File uploaded successfully!");
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  } else {
+    showAlert("warning", "File was not uploaded properly.");
+  }
+} else {
+  console.log(" No file question found or user did not upload a file — skipping upload.");
+}
+    // Step 3: Prepare quiz data
+    const userInfo = {
+      email: document.getElementById("email").value,
+      name: document.getElementById("name").value,
+      mobile: document.getElementById("mobile").value,
+      designation: document.getElementById("designation").value,
+      jurisdiction: document.getElementById("jurisdiction").value,
+      experience: document.getElementById("experience").value,
+      aiUse: document.getElementById("ai-use").value,
+      civilCases: document.getElementById("civil-cases").value,
+      articles: document.getElementById("articles").value,
+      laws: getSelectedLaws(),
+      timeTasks: document.getElementById("time-tasks").value,
+      expertise: document.getElementById("expertise").value,
+      features: document.getElementById("features").value,
+      score: score,
+      caseFileUrl: fileUrl,
+    };
+
+    const responses = userAnswers.map((r, i) => ({
+      question_no: i + 1,
+      question: r.question,
+      selected: r.selectedOption,
+      correct: r.correctAnswer,
+    }));
+
+    // Step 4: Save quiz data (alerts shown inside)
+    await saveQuizData(userInfo, responses);
+
+    quizPage.classList.remove("active");
+    quizPage.style.display = "none";
+    resultPage.classList.add("active");
+    resultPage.style.display = "block";
+    document.getElementById("score").textContent = score;
+
+  } catch (err) {
+    console.error(" Error finishing quiz:", err);
+    showAlert("error", "An error occurred while finishing your quiz. Please try again.");
+  } finally {
+    clearInterval(timerInterval);
+  }
+}
+// document.querySelectorAll('#user-form input, #user-form textarea').forEach(field => {
+//   field.addEventListener('input', () => {
+//     const max = field.getAttribute('maxlength');
+//     if (max && field.value.length > max) {
+//       showAlert("warning", `${field.previousElementSibling.textContent.trim()} cannot exceed ${max} characters.`);
+//       field.value = field.value.slice(0, max); // Trim extra input
+//     }
+//   });
 // });
-
-// function showQuestion() {
-//   const q = questions[currentIndex];
-//   questionContainer.innerHTML = `
-//     <h4>${q.question}</h4>
-//     ${q.options
-//       .map(
-//         (opt, i) =>
-//           `<button class="btn btn-outline-primary d-block w-100 mb-2 option-btn">${opt}</button>`
-//       )
-//       .join("")}
-//   `;
-// }

@@ -5,7 +5,7 @@ const SUPABASE_CONFIG = {
 };
 
 const QUIZ_SETTINGS = {
-  TOTAL_TIME: 300,   // total time in seconds (5 minutes)
+  TOTAL_TIME: 120,   // total time in seconds (5 minutes)
   TOTAL_QUESTIONS: 30,
   SHOW_PROGRESS_BAR: true,
   RANDOMIZE_QUESTIONS: true,

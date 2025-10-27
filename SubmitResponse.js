@@ -1,9 +1,22 @@
-// submitResponses.js
+
+
+
 async function saveQuizData(userInfo, responses) {
+  const nextBtn = document.getElementById("next-btn");
+
+  // Step 1: Show starting alert
+  showAlert("info", "Submitting your response... Please wait!");
+
+  // Disable button
+  if (nextBtn) {
+    nextBtn.disabled = true;
+
+    nextBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Submitting...`;
+  }
+
   try {
-    // Insert into your Supabase table
     const { data, error } = await supabase
-      .from("quiz_responses") // name of your table
+      .from("quiz_responses")
       .insert([
         {
           email: userInfo.email,
@@ -15,28 +28,40 @@ async function saveQuizData(userInfo, responses) {
           ai_use: userInfo.aiUse,
           civil_cases: userInfo.civilCases,
           articles: userInfo.articles,
-          laws: userInfo.laws, // maybe a string or array
+          laws: userInfo.laws,
           time_tasks: userInfo.timeTasks,
           expertise: userInfo.expertise,
           features: userInfo.features,
-          responses: responses, // jsonb field
-         // submitted_at: new Date().toISOString(),
-         total_score: userInfo.score
+          responses: responses,
+          total_score: userInfo.score,
+          pdf_url: userInfo.caseFileUrl,
         },
       ]);
 
+    // Allow alert visibility
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
     if (error) {
       console.error(" Error saving quiz data:", error.message);
-      alert("Failed to save quiz responses. Please try again.");
-      return;
+      showAlert("error", "Failed to save your responses. Please try again.");
+      throw new Error(error.message);
     }
 
     console.log(" Quiz data saved successfully:", data);
-    alert("Your quiz responses have been submitted successfully!");
+    showAlert("success", "Your quiz has been submitted successfully!");
+
   } catch (err) {
     console.error(" Unexpected error:", err);
+    showAlert("error", "Something went wrong while saving. Please try again later.");
+    throw err; // rethrow to let finishQuiz handle it
+  } finally {
+    // Restore button
+    // if (nextBtn) {
+    //   nextBtn.disabled = false;
+    //   nextBtn.innerHTML = "Submit";
+    // }
   }
 }
 
-// Export it globally
+// Export globally
 window.saveQuizData = saveQuizData;
