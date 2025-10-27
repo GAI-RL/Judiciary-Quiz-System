@@ -24,14 +24,14 @@ resultPage.style.display = "none";
 // Fetch questions
 async function fetchQuestions() {
  // const { data, error } = await supabase.from("questions").select("*");
- const { data, error } = await supabase
-  .from("questions")
-  .select("*")
-  .order("id", { ascending: false }).limit(2);
+ // const { data, error } = await supabase
+ //  .from("questions")
+ //  .select("*")
+ //  .order("id", { ascending: false }).limit(2);
 
-  // const { data, error } = await supabase
-  //   .from("questions")
-  //   .select("*");
+  const { data, error } = await supabase
+    .from("questions")
+    .select("*");
 
   if (error) {
     console.error("Error fetching questions:", error);
@@ -514,3 +514,4 @@ if (fileAnswer) {
 //     }
 //   });
 // });
+
