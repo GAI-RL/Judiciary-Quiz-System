@@ -54,6 +54,13 @@ async function fetchQuestions() {
 document.getElementById("start-btn").addEventListener("click", async (e) => {
   e.preventDefault();
   console.log(" Start button clicked!");
+ // Count only MCQs that have correct answers
+totalScorableQuestions = questions.filter(q => 
+  Array.isArray(q.options) && q.options.length > 0 && q.answer
+).length;
+
+document.getElementById("score-total").textContent = totalScorableQuestions;
+
 
 
   const requiredFields = document.querySelectorAll("#user-form [required]");
@@ -497,6 +504,7 @@ if (fileAnswer) {
     resultPage.classList.add("active");
     resultPage.style.display = "block";
     document.getElementById("score").textContent = score;
+   document.getElementById("score-total").textContent = totalScorableQuestions;
 
   } catch (err) {
     console.error(" Error finishing quiz:", err);
@@ -514,4 +522,5 @@ if (fileAnswer) {
 //     }
 //   });
 // });
+
 
