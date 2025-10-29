@@ -321,7 +321,7 @@ nextBtn.addEventListener("click", () => {
 
   // Score only if answer exists
   if (q.options && q.answer && selectedOption === q.answer) {
-    score++;
+    score *2;
     console.log("Score is " + score);
   }
 
@@ -522,5 +522,6 @@ if (fileAnswer) {
 //     }
 //   });
 // });
+
 
 
