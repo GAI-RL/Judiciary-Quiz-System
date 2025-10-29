@@ -5,7 +5,7 @@ const SUPABASE_CONFIG = {
 };
 
 const QUIZ_SETTINGS = {
-  TOTAL_TIME: 600,   // total time in seconds (5 minutes)
+  TOTAL_TIME: 1680,   // total time in seconds (28 minutes)
   TOTAL_QUESTIONS: 30,
   SHOW_PROGRESS_BAR: true,
   RANDOMIZE_QUESTIONS: true,
@@ -18,4 +18,5 @@ let score = 0;
 let timer = QUIZ_SETTINGS.TOTAL_TIME;
 let timerInterval;
 let selectedOption = null;
+
 
